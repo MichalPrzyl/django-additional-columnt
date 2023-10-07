@@ -17,6 +17,14 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         fields = '__all__'
 
+    def get_fields(self):
+        from django.db.models.fields import Field
+        fields = super().get_fields()
+        my_field = Field('abc')
+        # fields[my_field] = 'eklo'
+
+        return fields
+
         
 class BaseArticleSerializer(serializers.BaseSerializer):
     # additional_fields = serializers.SerializerMethodField()

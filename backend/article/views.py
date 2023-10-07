@@ -12,9 +12,7 @@ import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 class OwnFilterBackend(DjangoFilterBackend):
-    """
-    Filter that only allows users to see their own objects.
-    """
+   
     def filter_queryset(self, request, queryset, view):
         output = []
         print('lul')
@@ -41,10 +39,11 @@ class OwnFilterBackend(DjangoFilterBackend):
 
 
 class ArticleAPI(generics.ListAPIView):
-    serializer_class = BaseArticleSerializer
+    # serializer_class = BaseArticleSerializer
+    serializer_class = ArticleSerializer
     queryset = Article.objects
-    filter_backends = [OwnFilterBackend]
-    filterset_fields = ['id']
+    # filter_backends = [OwnFilterBackend]
+    # filterset_fields = ['id']
 
 
 

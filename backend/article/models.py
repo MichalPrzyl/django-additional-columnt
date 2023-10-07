@@ -13,9 +13,19 @@ from django.db.models.signals import class_prepared
 class Article(models.Model):
     name = models.CharField(max_length=255)
     content = models.TextField()
-   
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
+    
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        
+        # my_fields = self._meta.fields
+        # my_fields._mutable = True
+        # my_fields.append('abc')
+        # self._meta.fields = my_fields
+        # self.abc = 'def'
+        setattr(self, 'testing', 'but not good enough')
+        print(f"\033[94mself.__dict__\033[0m: {self.__dict__}")
+
 
 class ArticleAdditionalColumn(models.Model):
     name = models.CharField(max_length=255)
