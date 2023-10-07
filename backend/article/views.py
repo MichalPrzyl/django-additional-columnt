@@ -3,15 +3,50 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
 # models
-from article.models import Article
+from article.models import Article, ArticleAdditionalColumn, ArticleAdditionalField
 # serializers
-from article.serializers import ArticleSerializer
+from article.serializers import ArticleSerializer, BaseArticleSerializer
 # forms
 from article.forms import ArticleForm
+import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
+
+class OwnFilterBackend(DjangoFilterBackend):
+    """
+    Filter that only allows users to see their own objects.
+    """
+    def filter_queryset(self, request, queryset, view):
+        output = []
+        print('lul')
+        for element in request.GET.keys():
+            additional_column = element
+            additional_value = request.GET[element]
+            fields = ArticleAdditionalField.objects.filter(instance__in=queryset.all(), 
+                                                           column__name=additional_column,
+                                                           value=additional_value)\
+                                                            .values_list('instance_id', flat=True)
+
+            output.extend(fields)
+
+        qs = queryset.filter(id__in=output)
+        print(f"\033[94mqs\033[0m: {qs}")
+        return qs
+
+
+# class ArticleFilter(django_filters.FilterSet):
+#     id = django_filters.NumberFilter()
+#     class Meta:
+#         model = Article
+#         fields = ['id']
+
 
 class ArticleAPI(generics.ListAPIView):
-    serializer_class = ArticleSerializer
+    serializer_class = BaseArticleSerializer
     queryset = Article.objects
+    filter_backends = [OwnFilterBackend]
+    filterset_fields = ['id']
+
+
 
 
 from django.http import HttpResponse
