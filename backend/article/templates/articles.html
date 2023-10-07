@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" href="article/templates/style.css"> -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+    <h1>Articles</h1>
+    <p>Welcome to my first Django project!</p>
+
+    {% for o in data %}
+    <div class="card">
+        <div>
+            id: {{o.id}}
+        </div>
+
+
+        <div>
+            name: {{o.name}}
+        </div>
+
+        <div>
+            content: {{o.content}}
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+
+
+    <br>
+    <br>
+    ================================================================
+    <br>
+
+    <form action="/articles/create" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" onClick="{{ request.get_full_path }}">
+        <a href="{{ request.get_full_path }}">Reload</a>
+    </form>
+
+</body>
+
+</html>
